@@ -25,7 +25,7 @@
  */
 
 import Foundation
-import PromiseKit
+import RxSwift
 import Dispatch
 
 extension Extension where Base: DispatchQueue {
@@ -35,8 +35,17 @@ extension Extension where Base: DispatchQueue {
    - Parameter body: The closure that is executed on the given queue.
    - Returns: A new promise that is resolved when the provided closure returned.
    */
-  public final func async<T>(_ body: @escaping () throws -> T) -> Promise<T> {
-    return base.async(.promise, execute: body)
+  public final func async<T>(_ body: @escaping () throws -> T) -> Single<T> {
+    return Single.create { single -> Disposable in
+        self.base.async {
+            do {
+                single(.success(try body()))
+            } catch (let err) {
+                single(.error(err))
+            }
+        }
+        return Disposables.create()
+    }
   }
 
   /**
@@ -45,8 +54,8 @@ extension Extension where Base: DispatchQueue {
    - Parameter body: The closure that is executed on the given queue.
    */
   public final func async(_ body: @escaping () throws -> Void) {
-    let promise: Promise<Void> = async(body)
+    let promise: Single<Void> = async(body)
 
-    promise.catch { _ in }
+    _ = promise.subscribe()
   }
 }

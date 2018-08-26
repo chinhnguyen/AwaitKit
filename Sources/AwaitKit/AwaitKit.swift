@@ -25,7 +25,7 @@
  */
 
 import Foundation
-import PromiseKit
+import RxSwift
 import Dispatch
 
 /// Convenience struct to make the background job.
@@ -39,8 +39,8 @@ public struct Queue {
  - parameter body: The closure that is executed on a concurrent queue.
  - returns: A new promise that is resolved when the provided closure returned.
  */
-public func async<T>(_ body: @escaping () throws -> T) -> Promise<T> {
-  return Queue.async.async(.promise, execute: body)
+public func async<T>(_ body: @escaping () throws -> T) -> Single<T> {
+  return Queue.async.ak.async(body)
 }
 
 /**
@@ -69,6 +69,6 @@ public func await<T>(_ body: @escaping () throws -> T) throws -> T {
  - returns: The value of the promise when it is resolved.
  */
 @discardableResult
-public func await<T>(_ promise: Promise<T>) throws -> T {
+public func await<T>(_ promise: Single<T>) throws -> T {
   return try Queue.await.ak.await(promise)
 }

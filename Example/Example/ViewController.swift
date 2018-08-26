@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PromiseKit
+import RxSwift
 import AwaitKit
 
 struct User {
@@ -32,32 +32,36 @@ class ViewController: UIViewController {
 
   // MARK: - Promises
 
-  func signIn(username name: String, password: String) -> Promise<User> {
+  func signIn(username name: String, password: String) -> Single<User> {
     print("signIn")
     return async { User(name: name) }
   }
 
-  func sendWelcomeMailToUser(_ user: User) -> Promise<Void> {
+  func sendWelcomeMailToUser(_ user: User) -> Single<Void> {
     print("sendWelcomeMailToUser")
-    return Promise { seal in
+    return Single.create { single in
       let deadlineTime = DispatchTime.now() + .seconds(1)
       let queue        = DispatchQueue(label: "com.yannickloriot.queue", attributes: .concurrent)
 
       queue.asyncAfter(deadline: deadlineTime, execute: {
-        seal.fulfill(())
+        single(.success(()))
+//        seal.fulfill(())
       })
+        return Disposables.create()
     }
   }
 
-  func redirectToThankYouScreen() -> Promise<Void> {
+  func redirectToThankYouScreen() -> Single<Void> {
     print("redirectToThankYouScreen")
-    return Promise { seal in
+    return Single.create { single in
       let deadlineTime = DispatchTime.now() + .seconds(1)
       let queue        = DispatchQueue(label: "com.yannickloriot.queue", attributes: .concurrent)
 
       queue.asyncAfter(deadline: deadlineTime, execute: {
-        seal.fulfill(())
+        single(.success(()))
+//        seal.fulfill(())
       })
+        return Disposables.create()
     }
   }
 }

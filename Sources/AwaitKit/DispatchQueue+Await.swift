@@ -25,7 +25,7 @@
  */
 
 import Foundation
-import PromiseKit
+import RxSwift
 import Dispatch
 
 extension Extension where Base: DispatchQueue {
@@ -39,7 +39,7 @@ extension Extension where Base: DispatchQueue {
    */
   @discardableResult
   public final func await<T>(_ body: @escaping () throws -> T) throws -> T {
-    let promise = self.base.async(.promise, execute: body)
+    let promise = self.base.ak.async(body)
 
     return try await(promise)
   }
@@ -52,7 +52,7 @@ extension Extension where Base: DispatchQueue {
    - returns: The value of the promise when it is resolved.
    */
   @discardableResult
-  public final func await<T>(_ promise: Promise<T>) throws -> T {
+  public final func await<T>(_ promise: Single<T>) throws -> T {
     guard self.base.label != DispatchQueue.main.label else {
       throw NSError(domain: "com.yannickloriot.awaitkit", code: 0, userInfo: [
         NSLocalizedDescriptionKey: "Operation was aborted.",
@@ -65,19 +65,14 @@ extension Extension where Base: DispatchQueue {
 
     let semaphore = DispatchSemaphore(value: 0)
 
-    promise
-      .then(on: self.base) { value -> Promise<Void> in
-        result = value
-
-        semaphore.signal()
-
-        return Promise()
-      }
-      .catch(on: self.base, policy: .allErrors) { err in
-        error = err
-
-        semaphore.signal()
-      }
+    _ = promise
+        .subscribe(onSuccess: { value in
+            result = value
+            semaphore.signal()
+        }, onError: { err in
+            error = err
+            semaphore.signal()
+        })
 
     _ = semaphore.wait(timeout: .distantFuture)
 

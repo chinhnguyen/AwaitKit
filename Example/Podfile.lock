@@ -1,27 +1,23 @@
 PODS:
-  - AwaitKit (4.0.0):
-    - PromiseKit (~> 6)
-  - PromiseKit (6.2.0):
-    - PromiseKit/CorePromise (= 6.2.0)
-    - PromiseKit/Foundation (= 6.2.0)
-    - PromiseKit/UIKit (= 6.2.0)
-  - PromiseKit/CorePromise (6.2.0)
-  - PromiseKit/Foundation (6.2.0):
-    - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.2.0):
-    - PromiseKit/CorePromise
+  - AwaitKit (5.0.0):
+    - RxSwift (~> 4)
+  - RxSwift (4.2.0)
 
 DEPENDENCIES:
   - AwaitKit (from `..`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - RxSwift
+
 EXTERNAL SOURCES:
   AwaitKit:
-    :path: ..
+    :path: ".."
 
 SPEC CHECKSUMS:
-  AwaitKit: 4008c4fd2f2dbb75a8732b0c3f66935a46647981
-  PromiseKit: ea9a155e1fd98a926ccfaf633c0fbd69851f0e7b
+  AwaitKit: 78c824f7402a123b95afdefe5ca9e830eb02d442
+  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
 
 PODFILE CHECKSUM: 78e564670b78aa7f30da04815ee08a7f80131817
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

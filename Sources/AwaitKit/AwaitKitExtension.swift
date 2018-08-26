@@ -37,23 +37,27 @@ public final class Extension<Base> {
     self.base = base
   }
 }
-
-/**
- A type that has AwaitKit extensions.
- */
-public protocol AwaitKitCompatible {
-  associatedtype CompatibleType
-
-  /// The `ak` category.
-  var ak: CompatibleType { get }
-}
-
-public extension AwaitKitCompatible {
-  /// By default the `ak` category returns an Extension object which contains itself.
-  public var ak: Extension<Self> {
-    get { return Extension(self) }
-  }
-}
+//
+///**
+// A type that has AwaitKit extensions.
+// */
+//public protocol AwaitKitCompatible {
+//  associatedtype CompatibleType
+//
+//  /// The `ak` category.
+//  var ak: CompatibleType { get }
+//}
+//
+//public extension AwaitKitCompatible {
+//  /// By default the `ak` category returns an Extension object which contains itself.
+//  public var ak: Extension<Self> {
+//    get { return Extension(self) }
+//  }
+//}
 
 /// Extends the DispatchQueue to support the AwaitKit.
-extension DispatchQueue: AwaitKitCompatible { }
+extension DispatchQueue {//}: AwaitKitCompatible {
+    public var ak: Extension<DispatchQueue> {
+        get { return Extension(self) }
+    }
+}
